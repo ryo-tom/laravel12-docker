@@ -1,0 +1,8 @@
+# Ignore db directory created after docker compose up
+docker/db/
+
+/.composer
+/.npm
+
+# Ignore unnecessary files
+.DS_Store
