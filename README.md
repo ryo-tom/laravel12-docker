@@ -1,6 +1,6 @@
 # Docker Laravel
 
-A Docker development environment for Laravel applications with PHP 8.2, MySQL, and Nginx.
+A Docker development environment for Laravel 12.x applications with PHP 8.2, MySQL, and Nginx.
 
 ## 📋 Prerequisites
 
@@ -43,7 +43,7 @@ A Docker development environment for Laravel applications with PHP 8.2, MySQL, a
 Start the containers:
 
 ```bash
-docker compose up -d --build
+docker compose up -d
 ```
 
 ## 📦 Installing Laravel
@@ -84,6 +84,8 @@ laravel new -f src
 ```
 
 ## ⚙️ Configure Environment
+
+Make sure you are in `src/` before running these commands.
 
 1. Copy the example environment file:
 
