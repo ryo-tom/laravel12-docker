@@ -2,7 +2,7 @@
 
 A Docker development environment for Laravel applications with PHP 8.2, MySQL, and Nginx.
 
-## 📋 Requirements
+## 📋 Prerequisites
 
 - Docker 20.x or higher
 - Docker Compose 2.x or higher
@@ -10,7 +10,7 @@ A Docker development environment for Laravel applications with PHP 8.2, MySQL, a
 ## 🏗️ Project Structure
 
 ```bash
-docker-laravel/
+/
 ├── docker/
 │   ├── mysql/
 │   │   └── my.cnf              # MySQL configuration
@@ -29,46 +29,75 @@ docker-laravel/
 
 ## 🚀 Tech Stack
 
-- **PHP**: 8.2-FPM
-- **Composer**: 2.x (latest)
-- **Laravel**: 12.x
-- **MySQL**: 8.0
-- **Nginx**: Latest
-- **Node.js**: 22.x LTS
-- **npm**: Latest
+|Service|Version|Purpose|
+|---|---|---|
+|PHP-FPM|8.2|Application runtime|
+|Composer|2.x|PHP dependency management|
+|Laravel|12.x|Web application framework|
+|MySQL|8.0|Primary database|
+|Nginx|latest|Web server & reverse proxy|
+|Node.js|22.x LTS|Frontend tooling|
 
-## 🛠️ Quick Start
+## 🛠️ Getting Started
 
-### New Laravel Project
+Start the containers:
 
 ```bash
-# Start containers
 docker compose up -d --build
+```
 
-# Enter container
+## 📦 Installing Laravel
+
+ Enter the application container: 
+
+```bash
 docker compose exec app bash
 ```
 
-Inside container:
+The container’s working directory is already set to `/var/www/html/src`. On the first run this directory will be empty, and you can install Laravel inside it.
 
-The working directory is already `/var/www/html/src` (empty on first run). 
+You have two options to bootstrap a new Laravel project:
+
+### Option 1: Using Composer
 
 ```bash
+# Install Laravel into the current directory (src/)
 composer create-project laravel/laravel . "12.*" --prefer-dist
 ```
 
-> Note: We don’t use `laravel new` here because it only runs in a completely empty target directory and relies on a writable Composer global home. In a Docker setup running as a non-root user, that adds fragile permission/setup steps and often breaks. Using composer create-project is simpler and more reproducible.
+### Option 2: Using Laravel Installer (for starter kits)
 
-### Setup Environment & Database
+If you need Laravel’s official starter kits, use the Laravel Installer.
 
-Setup environment:
+```bash
+# Install Laravel installer globally
+composer global require laravel/installer
+
+# Add to PATH
+export PATH="$PATH:/var/www/html/.composer/vendor/bin"
+
+# Move to parent directory
+cd ..
+
+# Install with force flag to use existing src/ directory
+laravel new -f src
+```
+
+## ⚙️ Configure Environment
+
+1. Copy the example environment file:
 
 ```bash
 cp .env.example .env
+```
+
+2. Generate the app key:
+
+```bash
 php artisan key:generate
 ```
 
-Update `.env` file:
+3. Update `.env` with database settings:
 
 ```env
 DB_CONNECTION=mysql
@@ -79,28 +108,33 @@ DB_USERNAME=laravel_user
 DB_PASSWORD=laravel_password
 ```
 
-Run migrations:
+4. Run migrations:
 
 ```bash
 php artisan migrate
 ```
 
-### Vite HMR in Docker
+## 🔥 Frontend (Vite)
 
-Add this to `vite.config.ts` so the dev server binds inside the container and the browser connects from the host:
+Laravel uses Vite for asset bundling.
+
+1. Update `vite.config.ts` so the dev server binds inside Docker and connects from the host:
 
 ```ts
 server: {
-    host: true,
-    hmr: {
-        host: 'localhost',
-    },
+  host: true,
+  hmr: { host: 'localhost' },
 },
 ```
 
-## 🌐 Access URLs
+2. Start the Vite dev server for hot reload:
 
-- **Application**: <http://localhost>
+```bash
+npm install
+npm run dev
+```
+
+Now changes to JS/CSS will update immediately at [http://localhost](http://localhost).
 
 ## 💡 Tips
 
