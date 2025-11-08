@@ -1,8 +1,13 @@
-# Ignore db directory created after docker compose up
+# macOS
+.DS_Store
+
+# Editor settings
+.vscode/
+.idea/
+
+# Docker local data
 docker/db/
 
+# Local dependency caches
 /.composer
 /.npm
-
-# Ignore unnecessary files
-.DS_Store
